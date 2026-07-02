@@ -1,0 +1,30 @@
+{
+  "name": "claude-burrow",
+  "version": "0.1.0",
+  "description": "Cross-device session sync for Claude Code — encrypt and sync your conversations via Cloudflare R2",
+  "main": "scripts/sync-engine.js",
+  "scripts": {
+    "setup": "node scripts/setup.js",
+    "push": "node scripts/push.js",
+    "pull": "node scripts/pull.js",
+    "status": "node scripts/status.js",
+    "test": "node --test tests/*.test.js"
+  },
+  "keywords": [
+    "claude-code",
+    "sync",
+    "cross-device",
+    "cloudflare-r2",
+    "encryption",
+    "session-backup"
+  ],
+  "author": "ClaudeBurrow",
+  "license": "MIT",
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.600.0",
+    "dotenv": "^17.4.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

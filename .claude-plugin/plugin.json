@@ -1,0 +1,14 @@
+{
+  "name": "claude-burrow",
+  "displayName": "ClaudeBurrow",
+  "version": "0.1.0",
+  "description": "Cross-device session sync for Claude Code — encrypt and sync your conversations via Cloudflare R2",
+  "author": {
+    "name": "ClaudeBurrow",
+    "url": "https://github.com/foguangsword/claude-burrow"
+  },
+  "keywords": ["sync", "backup", "cross-device", "cloudflare-r2", "encryption"],
+  "categories": ["productivity", "backup"],
+  "homepage": "https://github.com/foguangsword/claude-burrow",
+  "license": "MIT"
+}
