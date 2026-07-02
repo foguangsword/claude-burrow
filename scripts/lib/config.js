@@ -306,9 +306,10 @@ function detectCurrentSession(cwd) {
 function getProjectSessionDir(cwd) {
   // CC replaces non-alphanumeric chars with '-' in project directory name.
   // Do NOT collapse consecutive dashes — CC preserves them (e.g. D:\cc_tool → D--cc-tool).
+  // Do NOT strip leading '-' — Unix absolute paths produce it (e.g. /Users/... → -Users-...).
   const projectSlug = cwd
     .replace(/[^a-zA-Z0-9]/g, '-')
-    .replace(/^-|-$/g, '')
+    .replace(/-$/, '')       // Only strip trailing dash (paths ending in /)
     .toLowerCase() || 'root';
 
   return path.join(os.homedir(), '.claude', 'projects', projectSlug);

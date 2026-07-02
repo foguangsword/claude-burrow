@@ -182,3 +182,11 @@ Machine B: 删除本地配置 → 云端拉取 salt → 一致 ✓
 **MVP 完成**：加密 push/pull、salt 云端自动同步、跨设备端到端验证通过。
 **云端**：OSS bucket 存储 3 个会话（含当前 2.6MB 项目主会话）。
 **下一步**：GitHub 仓库 + Marketplace 发布，进阶功能（auto-push、配置同步等）。
+
+### 2026-07-02 — Mac 跨平台路径修复
+
+**Bug**: Mac 上 pull 后 resume 失败，CC 报 "No conversation found"。原因是 `getProjectSessionDir()` 把 Unix 绝对路径的前导 `-` 去掉了：
+- 代码产出：`users-hayashihiroshi-cc-tool`
+- CC 实际：`-Users-hayashihiroshi-cc-tool`（前导 `/` → `-`，CC 保留它）
+
+**修复**: `.replace(/^-|-$/g, '')` → `.replace(/-$/, '')`，只去掉尾部横线，保留 Unix 路径产生的前导横线。Windows 路径（如 `D:\cc_tool`）无前导 `/`，不受影响。
