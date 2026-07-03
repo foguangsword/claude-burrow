@@ -56,7 +56,7 @@ async function main() {
 
   // 3. Also clean up the index: remove any test-session entries, re-upload
   console.log('\n[3] Cleaning index entries...');
-  const PASSPHRASE = process.env.CLAWDBURROW_PASSPHRASE || 'burrow-test-2026';
+  const PASSPHRASE = process.env.CLAUDEBURROW_PASSPHRASE || 'burrow-test-2026';
 
   // Use the persisted salt from config, or the test salt as fallback
   const cfg = config.getEffectiveConfig();

@@ -87,7 +87,7 @@ formatBytes:    OK
 - `.env` 文件 gitignored，`.env.example` 提交作为模板
 - `config.getEffectiveConfig()`：优先读 `config.json`（setup 向导生成），fallback 到 `.env`（开发模式）
 - env 模式下 salt 和 userId 首次自动生成并持久化到 `config.json`，后续复用
-- 变量前缀统一为 `CLAWDBURROW_`
+- 变量前缀统一为 `CLAUDEBURROW_`
 
 ### 2026-07-02 — 移除 userId 多租户隔离
 
@@ -189,4 +189,4 @@ Machine B: 删除本地配置 → 云端拉取 salt → 一致 ✓
 - 代码产出：`users-hayashihiroshi-cc-tool`
 - CC 实际：`-Users-hayashihiroshi-cc-tool`（前导 `/` → `-`，CC 保留它）
 
-**修复**: `.replace(/^-|-$/g, '')` → `.replace(/-$/, '')`，只去掉尾部横线，保留 Unix 路径产生的前导横线。Windows 路径（如 `D:\cc_tool`）无前导 `/`，不受影响。
+**修复**: `.replace(/^-|-$/g, '')` → `.replace(/-$/, '')`，只去掉尾部横线，保留 Unix 路径产生的前导横线。Windows 路径（如 `D:\cc_tool`）无前导 `/`，不受影响。另外顺手修复了.env和README中环境变量名前缀的拼写错误。

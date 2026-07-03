@@ -42,17 +42,17 @@ function loadEnv() {
 loadEnv();
 
 /**
- * Build a storage config from environment variables (CLAWDBURROW_* prefix).
+ * Build a storage config from environment variables (CLAUDEBURROW_* prefix).
  * Returns null if the required env vars are not set.
  *
  * @returns {Object|null} storage config or null
  */
 function loadStorageFromEnv() {
-  const type = process.env.CLAWDBURROW_STORAGE_TYPE;
-  const endpoint = process.env.CLAWDBURROW_STORAGE_ENDPOINT;
-  const bucket = process.env.CLAWDBURROW_STORAGE_BUCKET;
-  const accessKeyId = process.env.CLAWDBURROW_STORAGE_ACCESS_KEY_ID;
-  const secretAccessKey = process.env.CLAWDBURROW_STORAGE_SECRET_ACCESS_KEY;
+  const type = process.env.CLAUDEBURROW_STORAGE_TYPE;
+  const endpoint = process.env.CLAUDEBURROW_STORAGE_ENDPOINT;
+  const bucket = process.env.CLAUDEBURROW_STORAGE_BUCKET;
+  const accessKeyId = process.env.CLAUDEBURROW_STORAGE_ACCESS_KEY_ID;
+  const secretAccessKey = process.env.CLAUDEBURROW_STORAGE_SECRET_ACCESS_KEY;
 
   if (!type || !endpoint || !bucket || !accessKeyId || !secretAccessKey) {
     return null;
@@ -64,7 +64,7 @@ function loadStorageFromEnv() {
     bucket,
     accessKeyId,
     secretAccessKey,
-    region: process.env.CLAWDBURROW_STORAGE_REGION || (type === 'r2' ? 'auto' : 'oss-cn-hangzhou'),
+    region: process.env.CLAUDEBURROW_STORAGE_REGION || (type === 'r2' ? 'auto' : 'oss-cn-hangzhou'),
   };
 }
 
@@ -175,7 +175,7 @@ async function getEffectiveConfig() {
   // Priority 2: .env / environment variables (dev mode)
   const storageFromEnv = loadStorageFromEnv();
   if (storageFromEnv) {
-    const saltFromEnv = process.env.CLAWDBURROW_SALT;
+    const saltFromEnv = process.env.CLAUDEBURROW_SALT;
 
     if (cfg && cfg.crypto && !cfg.crypto.salt) {
       // Config exists but no salt — try cloud first, then env, then generate
@@ -190,7 +190,7 @@ async function getEffectiveConfig() {
 
     const newCfg = {
       version: 1,
-      deviceName: process.env.CLAWDBURROW_DEVICE_NAME || require('os').hostname(),
+      deviceName: process.env.CLAUDEBURROW_DEVICE_NAME || require('os').hostname(),
       storage: storageFromEnv,
       crypto: {
         salt,

@@ -19,7 +19,7 @@ if (!STORAGE_CONFIG) {
   process.exit(1);
 }
 
-const PASSPHRASE = process.env.CLAWDBURROW_PASSPHRASE || 'burrow-test-2026';
+const PASSPHRASE = process.env.CLAUDEBURROW_PASSPHRASE || 'burrow-test-2026';
 // Fixed salt so repeated test runs can read back the same index.
 // In production, salt is generated once during setup and persisted in config.json.
 const SALT = 'YnVycm93LXRlc3Qtc2FsdA=='; // "burrow-test-salt" in base64

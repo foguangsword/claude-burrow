@@ -2,6 +2,8 @@
 
 Claude Code 跨端会话同步工具。将对话加密后通过阿里云 OSS、Cloudflare R2 或任意 S3 兼容存储在多台机器间同步。
 
+你在公司电脑上和 Claude 聊了两小时，捋清了架构思路，调好了一堆上下文——下班回家，换台电脑，一切从零开始。ClaudeBurrow 解决的就是这个问题：把你的 Claude Code 会话加密同步到云端，随时随地接着聊，上下文一条不丢。
+
 > ⚠️ **Alpha 阶段** — 目前以本地插件方式（`--plugin-dir`）加载使用，尚未发布到 CC 插件市场。
 
 ## 支持的存储后端
@@ -129,15 +131,15 @@ claude --resume <session-id>
 
 | 变量 | 必填 | 示例 |
 |------|------|------|
-| `CLAWDBURROW_STORAGE_TYPE` | 是 | `oss`、`r2`、`s3`、`custom` |
-| `CLAWDBURROW_STORAGE_ENDPOINT` | 是 | `https://oss-cn-hangzhou.aliyuncs.com` |
-| `CLAWDBURROW_STORAGE_BUCKET` | 是 | `claude-burrow` |
-| `CLAWDBURROW_STORAGE_ACCESS_KEY_ID` | 是 | 你的 AccessKey |
-| `CLAWDBURROW_STORAGE_SECRET_ACCESS_KEY` | 是 | 你的 SecretKey |
-| `CLAWDBURROW_STORAGE_REGION` | 否 | `oss-cn-hangzhou`（OSS），`auto`（R2） |
-| `CLAWDBURROW_PASSPHRASE` | 否 | 非交互式脚本中使用 |
-| `CLAWDBURROW_SALT` | 否 | Base64 编码的盐（不设则自动生成） |
-| `CLAWDBURROW_DEVICE_NAME` | 否 | 默认用主机名 |
+| `CLAUDEBURROW_STORAGE_TYPE` | 是 | `oss`、`r2`、`s3`、`custom` |
+| `CLAUDEBURROW_STORAGE_ENDPOINT` | 是 | `https://oss-cn-hangzhou.aliyuncs.com` |
+| `CLAUDEBURROW_STORAGE_BUCKET` | 是 | `claude-burrow` |
+| `CLAUDEBURROW_STORAGE_ACCESS_KEY_ID` | 是 | 你的 AccessKey |
+| `CLAUDEBURROW_STORAGE_SECRET_ACCESS_KEY` | 是 | 你的 SecretKey |
+| `CLAUDEBURROW_STORAGE_REGION` | 否 | `oss-cn-hangzhou`（OSS），`auto`（R2） |
+| `CLAUDEBURROW_PASSPHRASE` | 否 | 非交互式脚本中使用 |
+| `CLAUDEBURROW_SALT` | 否 | Base64 编码的盐（不设则自动生成） |
+| `CLAUDEBURROW_DEVICE_NAME` | 否 | 默认用主机名 |
 
 ### 各后端 Endpoint 示例
 

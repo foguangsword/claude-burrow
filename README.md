@@ -2,6 +2,8 @@
 
 Cross-device session sync for Claude Code. Encrypt your conversations and sync them across machines via Aliyun OSS, Cloudflare R2, or any S3-compatible storage.
 
+You spent two hours with Claude at work — nailed the architecture, built up all the context — then got home, opened your laptop, and had to start over. ClaudeBurrow fixes that. It encrypts your Claude Code sessions and syncs them to the cloud, so you can pick up exactly where you left off, on any machine.
+
 > ⚠️ **Alpha software** — ClaudeBurrow is in early development. Currently tested as a local plugin (`--plugin-dir`). Marketplace publishing is planned.
 
 ## Supported Backends
@@ -119,15 +121,15 @@ claude --resume <session-id>
 
 | Variable | Required | Example |
 |----------|----------|---------|
-| `CLAWDBURROW_STORAGE_TYPE` | Yes | `oss`, `r2`, `s3`, `custom` |
-| `CLAWDBURROW_STORAGE_ENDPOINT` | Yes | `https://oss-cn-hangzhou.aliyuncs.com` |
-| `CLAWDBURROW_STORAGE_BUCKET` | Yes | `claude-burrow` |
-| `CLAWDBURROW_STORAGE_ACCESS_KEY_ID` | Yes | Your access key |
-| `CLAWDBURROW_STORAGE_SECRET_ACCESS_KEY` | Yes | Your secret key |
-| `CLAWDBURROW_STORAGE_REGION` | No | `oss-cn-hangzhou` (OSS), `auto` (R2) |
-| `CLAWDBURROW_PASSPHRASE` | No | Set for non-interactive scripts |
-| `CLAWDBURROW_SALT` | No | Base64 salt (auto-generated if omitted) |
-| `CLAWDBURROW_DEVICE_NAME` | No | Defaults to hostname |
+| `CLAUDEBURROW_STORAGE_TYPE` | Yes | `oss`, `r2`, `s3`, `custom` |
+| `CLAUDEBURROW_STORAGE_ENDPOINT` | Yes | `https://oss-cn-hangzhou.aliyuncs.com` |
+| `CLAUDEBURROW_STORAGE_BUCKET` | Yes | `claude-burrow` |
+| `CLAUDEBURROW_STORAGE_ACCESS_KEY_ID` | Yes | Your access key |
+| `CLAUDEBURROW_STORAGE_SECRET_ACCESS_KEY` | Yes | Your secret key |
+| `CLAUDEBURROW_STORAGE_REGION` | No | `oss-cn-hangzhou` (OSS), `auto` (R2) |
+| `CLAUDEBURROW_PASSPHRASE` | No | Set for non-interactive scripts |
+| `CLAUDEBURROW_SALT` | No | Base64 salt (auto-generated if omitted) |
+| `CLAUDEBURROW_DEVICE_NAME` | No | Defaults to hostname |
 
 ### Storage endpoint examples
 
