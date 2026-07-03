@@ -190,3 +190,108 @@ Machine B: 删除本地配置 → 云端拉取 salt → 一致 ✓
 - CC 实际：`-Users-hayashihiroshi-cc-tool`（前导 `/` → `-`，CC 保留它）
 
 **修复**: `.replace(/^-|-$/g, '')` → `.replace(/-$/, '')`，只去掉尾部横线，保留 Unix 路径产生的前导横线。Windows 路径（如 `D:\cc_tool`）无前导 `/`，不受影响。另外顺手修复了.env和README中环境变量名前缀的拼写错误。
+
+### 2026-07-02 — 环境变量前缀拼写修正
+
+`CLAWDBURROW_` → `CLAUDEBURROW_`，与产品名 ClaudeBurrow 保持一致。涉及 7 个文件。
+
+---
+
+## MVP 产品总结
+
+### 已实现功能
+
+**核心同步**：
+- `/claude-burrow:push` — 加密并上传当前 CC 会话到云端
+- `/claude-burrow:pull` — 浏览云端会话列表，选择并下载到本地
+- `/claude-burrow:status` — 查看设备信息、存储连接、云端/本地会话概览
+- `/claude-burrow:setup` — 交互式初始化向导（存储后端 + salt 自动同步）
+
+**加密与安全**：
+- AES-256-GCM 认证加密，PBKDF2-SHA256 密钥派生（100,000 次迭代）
+- 密码不落盘，每次 push/pull 时输入
+- Salt 通过云端 `salt.dat` 明文自动同步，跨设备无需手动复制
+
+**存储后端**：
+- 阿里云 OSS（国内）、Cloudflare R2、AWS S3、任意 S3 兼容服务
+- 会话索引通过 ETag 乐观锁防并发冲突，OSS 不支持 If-Match 时自动降级
+
+**跨平台**：
+- Windows / macOS 均通过测试
+- Unix 路径前导 `-` 与 CC 保持一致
+
+**配置方式**：
+- `.env` 文件（开发/测试推荐）+ `/claude-burrow:setup` 向导（正式使用）
+- `config.json` 自动持久化，`getEffectiveConfig()` 多级 fallback
+
+### 已验证
+
+| 验证项 | 状态 |
+|--------|------|
+| OSS 集成测试（8 项） | ✅ |
+| 同一机器 push → 清本地 → pull → resume | ✅ |
+| Windows → OSS → macOS pull → resume | ✅（35 条消息完整恢复） |
+| 错误密码拒绝 | ✅ |
+| 关键词搜索 | ✅ |
+| 盐跨设备自动发现 | ✅ |
+
+### 当前覆盖范围
+
+```
+~/.claude/
+├── projects/{proj}/*.jsonl     ← ✅ 已覆盖（会话记录）
+├── CLAUDE.md                   ← ❌ 未覆盖（全局个人指令）
+├── skills/                     ← ❌ 未覆盖（个人技能）
+├── commands/                   ← ❌ 未覆盖（个人命令）
+├── agents/                     ← ❌ 未覆盖（个人子代理）
+├── rules/                      ← ❌ 未覆盖（个人规则）
+├── settings.json               ← ❌ 未覆盖（用户设置）
+├── keybindings.json            ← ❌ 未覆盖（快捷键）
+└── projects/{proj}/memory/     ← ❌ 未覆盖（项目自动记忆）
+```
+
+目前只覆盖了 **会话历史同步**。要达到"换台电脑无缝继续"的体验，还需要覆盖个人配置。
+
+---
+
+## 迭代计划
+
+### V0.2 — 配置文件同步
+
+**目标**：新机器上一条命令恢复所有个人配置。
+
+| 命令 | 功能 |
+|------|------|
+| `/claude-burrow:config push` | 加密上传 `CLAUDE.md` + `skills/` + `commands/` + `agents/` + `rules/` |
+| `/claude-burrow:config pull` | 下载并写入本地 `~/.claude/` |
+
+设计要点：
+- 配置也走 AES-256-GCM 加密（同一密码 + salt）
+- 写入前做冲突检测（本地有修改时提示，默认云端覆盖 or 合并）
+- `settings.json` 需要过滤机器相关字段（如路径），只同步通用设置
+- 项目级 `.claude/` 文件走 git，不在此范围
+
+### V0.3 — 自动记忆同步
+
+**目标**：项目自动记忆（auto memory）跨设备可用。
+
+- 每次 push session 时顺带上传 `~/.claude/projects/{proj}/memory/` 目录
+- pull session 时同步拉取对应项目记忆
+- 体积极小（text），几乎无额外开销
+
+### V0.4 — 体验增强
+
+| 功能 | 说明 |
+|------|------|
+| SessionEnd hook 自动推送 | 可选开启，对话结束自动同步，无需手动 `/push` |
+| `/claude-burrow:delete` | 管理云端 session（删除、归档） |
+| 增量同步 | 只上传 session 新增部分，而非整个文件重传 |
+| 密码缓存 | OS 钥匙链（macOS Keychain / Windows Credential Manager） |
+
+### V1.0 — 发布
+
+| 事项 | 说明 |
+|------|------|
+| GitHub 仓库 | 公开代码、README、LICENSE |
+| CC Plugin Marketplace | `/plugin install claude-burrow` 一键安装 |
+| 安装脚本 | `npm install` + `.env` 配置一条命令完成 |

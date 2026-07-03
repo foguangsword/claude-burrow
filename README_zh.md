@@ -161,7 +161,7 @@ claude --resume <session-id>
 
 ## 项目结构
 
-```
+```bash
 claude-burrow/
 ├── .claude-plugin/
 │   └── plugin.json              # 插件元数据

@@ -14,43 +14,56 @@ When the user invokes this command, do the following:
 
 1. Ask the user for their **encryption passphrase**. Do NOT log or store it.
 
-2. First, list cloud sessions:
+2. List cloud sessions:
    ```bash
    node "${CLAUDE_PLUGIN_ROOT}/scripts/pull.js" --passphrase "<passphrase>"
    ```
    (Add `--keyword "<keyword>"` if the user provided a search term.)
 
-3. Display the session list to the user clearly. Format it nicely with numbers, titles,
-   device names, and relative dates. Let the user pick one by number.
+3. Display the session list clearly — show number, title, device, date, and message count
+   for each entry. Let the user pick one by number.
 
-4. Once the user selects a session (by number), show where it was originally
-   synced from, then ask where to save it locally. If the user provides nothing
-   (empty answer), use the current working directory. Do NOT require them to
-   type anything — just accept an empty response as "use current directory".
+4. **Determine the target project path:**
+   - If the session's `projectPath` matches the current working directory → skip the path
+     question entirely, pass `--project-path "<cwd>"` directly.
+   - If they differ → ask the user briefly. Accept these as "use current directory":
+     "here", "current", "this", "当前目录", "当前", ".", "yes", "y".
+     ```
+     This session is from /home/alice/payment.
+     Save to current directory (D:\cc_tool)? Type a path, or "here" for current.
+     ```
+   - The user can also type a custom absolute path.
 
-   Example prompt:
-   ```
-   Session "Payment refactor" was originally at: /home/alice/work/payment
-   Where should I save it? (leave empty for current directory: /home/bob/code/cc_tool)
-   ```
-
-5. Run the download (omit --project-path to use default, or pass custom path):
+5. Run the download:
    ```bash
-   node "${CLAUDE_PLUGIN_ROOT}/scripts/pull.js" --passphrase "<passphrase>" --select <number> --project-path "<path>"
+   node "${CLAUDE_PLUGIN_ROOT}/scripts/pull.js" \
+     --passphrase "<passphrase>" \
+     --select <number> \
+     --project-path "<resolved-path>"
    ```
 
-6. Display the output. If successful, tell the user what command to run:
+6. Display the result. If successful, tell the user the exact command to run.
+   Fill in the actual session ID (not a placeholder). Include the `--plugin-dir` flag
+   if the user originally launched CC that way:
+
    ```
-   Resume with:  claude --resume <session-id>
+   ✓ Session downloaded. To resume, open a new terminal and run:
+
+     claude --plugin-dir ${CLAUDE_PLUGIN_ROOT} --resume f734ff63-054d-4a7a-b9e5-0c234abccfc9
+
+   (If you installed via marketplace, omit --plugin-dir.)
+   (CC can't switch sessions inside an active conversation — this needs a new window.)
    ```
+
+   Always substitute the REAL session ID from the downloaded session.
 
 ## Error handling
 
-- If the script says "not configured", tell the user to run `/claude-burrow:setup` first
-- If it says "Wrong passphrase", the passphrase must match the one used during setup
-- If "No cloud sessions yet", the user should push first with `/claude-burrow:push`
+- "not configured" → run `/claude-burrow:setup` first
+- "Wrong passphrase" → must match the passphrase used when the session was pushed
+- "No cloud sessions yet" → push first with `/claude-burrow:push`
 
 ## Cross-device path mapping
 
-Since project paths differ across machines, the pull script accepts `--project-path`
-to specify where to write the session file locally. Default is the current working directory.
+The pull script accepts `--project-path` to specify where to write the session file
+locally. Defaults to the current working directory.
